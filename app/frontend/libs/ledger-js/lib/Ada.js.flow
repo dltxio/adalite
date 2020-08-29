@@ -489,7 +489,7 @@ export default class Ada {
     }
 
     const _send = async (p1, p2, data) => {
-      return delay(5000).then(() => this.send(CLA, INS.SIGN_TX, p1, p2, data).then(
+      return delay(10000).then(() => this.send(CLA, INS.SIGN_TX, p1, p2, data).then(
         utils.stripRetcodeFromResponse
       ))
     }

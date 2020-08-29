@@ -654,7 +654,7 @@ var Ada = /*#__PURE__*/function () {
                       while (1) {
                         switch (_context10.prev = _context10.next) {
                           case 0:
-                            return _context10.abrupt("return", delay(5000).then(function () {
+                            return _context10.abrupt("return", delay(10000).then(function () {
                               return _this6.send(CLA, INS.SIGN_TX, p1, p2, data).then(_utils["default"].stripRetcodeFromResponse);
                             }));
 
