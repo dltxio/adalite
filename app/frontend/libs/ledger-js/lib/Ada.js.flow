@@ -187,7 +187,7 @@ const wrapRetryStillInCall = fn => async (...args: any) => {
 
 const wrapConvertError = fn => async (...args) => {
   try {
-    console.log(JSON.stringify(args))
+    console.log(JSON.stringify(args));
     return await fn(...args);
   } catch (e) {
     if (e && e.statusCode) {
@@ -235,6 +235,7 @@ export default class Ada {
       );
     const P1_UNUSED = 0x00;
     const P2_UNUSED = 0x00;
+    // await setTimeout(() => console.log('ahoj'), 3000)
     const response = await wrapRetryStillInCall(_send)(
       P1_UNUSED,
       P2_UNUSED,
@@ -483,10 +484,14 @@ export default class Ada {
     const P1_STAGE_WITNESSES = 0x0a;
     const P2_UNUSED = 0x00;
 
-    const _send = (p1, p2, data) => {
-      return this.send(CLA, INS.SIGN_TX, p1, p2, data).then(
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    const _send = async (p1, p2, data) => {
+      return delay(5000).then(() => this.send(CLA, INS.SIGN_TX, p1, p2, data).then(
         utils.stripRetcodeFromResponse
-      );
+      ))
     }
 
     const signTx_init = async (

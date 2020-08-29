@@ -226,7 +226,8 @@ var Ada = /*#__PURE__*/function () {
                 };
 
                 P1_UNUSED = 0x00;
-                P2_UNUSED = 0x00;
+                P2_UNUSED = 0x00; // await setTimeout(() => console.log('ahoj'), 3000)
+
                 _context3.next = 5;
                 return wrapRetryStillInCall(_send)(P1_UNUSED, P2_UNUSED, _utils["default"].hex_to_buf(""));
 
@@ -619,15 +620,21 @@ var Ada = /*#__PURE__*/function () {
   }, {
     key: "signTransaction",
     value: function () {
-      var _signTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee21(networkId, protocolMagic, inputs, outputs, feeStr, ttlStr, certificates, withdrawals, metadataHashHex) {
+      var _signTransaction = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee22(networkId, protocolMagic, inputs, outputs, feeStr, ttlStr, certificates, withdrawals, metadataHashHex) {
         var _this6 = this;
 
-        var P1_STAGE_INIT, P1_STAGE_INPUTS, P1_STAGE_OUTPUTS, P1_STAGE_FEE, P1_STAGE_TTL, P1_STAGE_CERTIFICATES, P1_STAGE_WITHDRAWALS, P1_STAGE_METADATA, P1_STAGE_CONFIRM, P1_STAGE_WITNESSES, P2_UNUSED, _send, signTx_init, signTx_addInput, signTx_addAddressOutput, signTx_addChangeOutput, signTx_addCertificate, signTx_addWithdrawal, signTx_setFee, signTx_setTtl, signTx_setMetadata, signTx_awaitConfirm, signTx_getWitness, witnessPathsSet, witnessPaths, _i, _arr, path, pathKey, _iterator, _step, input, _iterator2, _step2, output, _iterator3, _step3, certificate, _iterator4, _step4, withdrawal, _yield$signTx_awaitCo, txHashHex, witnesses, _i2, _witnessPaths, _path, witness;
+        var P1_STAGE_INIT, P1_STAGE_INPUTS, P1_STAGE_OUTPUTS, P1_STAGE_FEE, P1_STAGE_TTL, P1_STAGE_CERTIFICATES, P1_STAGE_WITHDRAWALS, P1_STAGE_METADATA, P1_STAGE_CONFIRM, P1_STAGE_WITNESSES, P2_UNUSED, delay, _send, signTx_init, signTx_addInput, signTx_addAddressOutput, signTx_addChangeOutput, signTx_addCertificate, signTx_addWithdrawal, signTx_setFee, signTx_setTtl, signTx_setMetadata, signTx_awaitConfirm, signTx_getWitness, witnessPathsSet, witnessPaths, _i, _arr, path, pathKey, _iterator, _step, input, _iterator2, _step2, output, _iterator3, _step3, certificate, _iterator4, _step4, withdrawal, _yield$signTx_awaitCo, txHashHex, witnesses, _i2, _witnessPaths, _path, witness;
 
-        return _regenerator["default"].wrap(function _callee21$(_context21) {
+        return _regenerator["default"].wrap(function _callee22$(_context22) {
           while (1) {
-            switch (_context21.prev = _context21.next) {
+            switch (_context22.prev = _context22.next) {
               case 0:
+                delay = function _delay(ms) {
+                  return new Promise(function (resolve) {
+                    return setTimeout(resolve, ms);
+                  });
+                };
+
                 //console.log("sign");
                 P1_STAGE_INIT = 0x01;
                 P1_STAGE_INPUTS = 0x02;
@@ -641,27 +648,17 @@ var Ada = /*#__PURE__*/function () {
                 P1_STAGE_WITNESSES = 0x0a;
                 P2_UNUSED = 0x00;
 
-                _send = function _send(p1, p2, data) {
-                  return _this6.send(CLA, INS.SIGN_TX, p1, p2, data).then(_utils["default"].stripRetcodeFromResponse);
-                };
-
-                signTx_init = /*#__PURE__*/function () {
-                  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(networkId, protocolMagic, numInputs, numOutputs, numCertificates, numWithdrawals, numWitnesses, includeMetadata) {
-                    var data, response;
+                _send = /*#__PURE__*/function () {
+                  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(p1, p2, data) {
                     return _regenerator["default"].wrap(function _callee10$(_context10) {
                       while (1) {
                         switch (_context10.prev = _context10.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].uint8_to_buf(networkId), _utils["default"].uint32_to_buf(protocolMagic), _utils["default"].uint8_to_buf(includeMetadata ? MetadataCodes.SIGN_TX_METADATA_YES : MetadataCodes.SIGN_TX_METADATA_NO), _utils["default"].uint32_to_buf(numInputs), _utils["default"].uint32_to_buf(numOutputs), _utils["default"].uint32_to_buf(numCertificates), _utils["default"].uint32_to_buf(numWithdrawals), _utils["default"].uint32_to_buf(numWitnesses)]);
-                            _context10.next = 3;
-                            return wrapRetryStillInCall(_send)(P1_STAGE_INIT, P2_UNUSED, data);
+                            return _context10.abrupt("return", delay(5000).then(function () {
+                              return _this6.send(CLA, INS.SIGN_TX, p1, p2, data).then(_utils["default"].stripRetcodeFromResponse);
+                            }));
 
-                          case 3:
-                            response = _context10.sent;
-
-                            _utils.Assert.assert(response.length == 0);
-
-                          case 5:
+                          case 1:
                           case "end":
                             return _context10.stop();
                         }
@@ -669,29 +666,28 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee10);
                   }));
 
-                  return function signTx_init(_x17, _x18, _x19, _x20, _x21, _x22, _x23, _x24) {
+                  return function _send(_x17, _x18, _x19) {
                     return _ref3.apply(this, arguments);
                   };
                 }();
 
-                signTx_addInput = /*#__PURE__*/function () {
-                  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(input) {
+                signTx_init = /*#__PURE__*/function () {
+                  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(networkId, protocolMagic, numInputs, numOutputs, numCertificates, numWithdrawals, numWitnesses, includeMetadata) {
                     var data, response;
                     return _regenerator["default"].wrap(function _callee11$(_context11) {
                       while (1) {
                         switch (_context11.prev = _context11.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].hex_to_buf(input.txHashHex), _utils["default"].uint32_to_buf(input.outputIndex)]);
-                            console.log('input', JSON.stringify(input));
-                            _context11.next = 4;
-                            return _send(P1_STAGE_INPUTS, P2_UNUSED, data);
+                            data = Buffer.concat([_utils["default"].uint8_to_buf(networkId), _utils["default"].uint32_to_buf(protocolMagic), _utils["default"].uint8_to_buf(includeMetadata ? MetadataCodes.SIGN_TX_METADATA_YES : MetadataCodes.SIGN_TX_METADATA_NO), _utils["default"].uint32_to_buf(numInputs), _utils["default"].uint32_to_buf(numOutputs), _utils["default"].uint32_to_buf(numCertificates), _utils["default"].uint32_to_buf(numWithdrawals), _utils["default"].uint32_to_buf(numWitnesses)]);
+                            _context11.next = 3;
+                            return wrapRetryStillInCall(_send)(P1_STAGE_INIT, P2_UNUSED, data);
 
-                          case 4:
+                          case 3:
                             response = _context11.sent;
 
                             _utils.Assert.assert(response.length == 0);
 
-                          case 6:
+                          case 5:
                           case "end":
                             return _context11.stop();
                         }
@@ -699,25 +695,22 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee11);
                   }));
 
-                  return function signTx_addInput(_x25) {
+                  return function signTx_init(_x20, _x21, _x22, _x23, _x24, _x25, _x26, _x27) {
                     return _ref4.apply(this, arguments);
                   };
                 }();
 
-                signTx_addAddressOutput = /*#__PURE__*/function () {
-                  var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(addressHex, amountStr) {
+                signTx_addInput = /*#__PURE__*/function () {
+                  var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12(input) {
                     var data, response;
                     return _regenerator["default"].wrap(function _callee12$(_context12) {
                       while (1) {
                         switch (_context12.prev = _context12.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].amount_to_buf(amountStr), _utils["default"].uint8_to_buf(TxOutputTypeCodes.SIGN_TX_OUTPUT_TYPE_ADDRESS), _utils["default"].hex_to_buf(addressHex)]);
-                            console.log('output', JSON.stringify({
-                              addressHex: addressHex,
-                              amountStr: amountStr
-                            }));
+                            data = Buffer.concat([_utils["default"].hex_to_buf(input.txHashHex), _utils["default"].uint32_to_buf(input.outputIndex)]);
+                            console.log('input', JSON.stringify(input));
                             _context12.next = 4;
-                            return _send(P1_STAGE_OUTPUTS, P2_UNUSED, data);
+                            return _send(P1_STAGE_INPUTS, P2_UNUSED, data);
 
                           case 4:
                             response = _context12.sent;
@@ -732,26 +725,59 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee12);
                   }));
 
-                  return function signTx_addAddressOutput(_x26, _x27) {
+                  return function signTx_addInput(_x28) {
                     return _ref5.apply(this, arguments);
                   };
                 }();
 
+                signTx_addAddressOutput = /*#__PURE__*/function () {
+                  var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(addressHex, amountStr) {
+                    var data, response;
+                    return _regenerator["default"].wrap(function _callee13$(_context13) {
+                      while (1) {
+                        switch (_context13.prev = _context13.next) {
+                          case 0:
+                            data = Buffer.concat([_utils["default"].amount_to_buf(amountStr), _utils["default"].uint8_to_buf(TxOutputTypeCodes.SIGN_TX_OUTPUT_TYPE_ADDRESS), _utils["default"].hex_to_buf(addressHex)]);
+                            console.log('output', JSON.stringify({
+                              addressHex: addressHex,
+                              amountStr: amountStr
+                            }));
+                            _context13.next = 4;
+                            return _send(P1_STAGE_OUTPUTS, P2_UNUSED, data);
+
+                          case 4:
+                            response = _context13.sent;
+
+                            _utils.Assert.assert(response.length == 0);
+
+                          case 6:
+                          case "end":
+                            return _context13.stop();
+                        }
+                      }
+                    }, _callee13);
+                  }));
+
+                  return function signTx_addAddressOutput(_x29, _x30) {
+                    return _ref6.apply(this, arguments);
+                  };
+                }();
+
                 signTx_addChangeOutput = /*#__PURE__*/function () {
-                  var _ref6 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee13(addressTypeNibble, spendingPath, amountStr) {
+                  var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14(addressTypeNibble, spendingPath, amountStr) {
                     var stakingPath,
                         stakingKeyHashHex,
                         stakingBlockchainPointer,
                         data,
                         response,
-                        _args13 = arguments;
-                    return _regenerator["default"].wrap(function _callee13$(_context13) {
+                        _args14 = arguments;
+                    return _regenerator["default"].wrap(function _callee14$(_context14) {
                       while (1) {
-                        switch (_context13.prev = _context13.next) {
+                        switch (_context14.prev = _context14.next) {
                           case 0:
-                            stakingPath = _args13.length > 3 && _args13[3] !== undefined ? _args13[3] : null;
-                            stakingKeyHashHex = _args13.length > 4 && _args13[4] !== undefined ? _args13[4] : null;
-                            stakingBlockchainPointer = _args13.length > 5 && _args13[5] !== undefined ? _args13[5] : null;
+                            stakingPath = _args14.length > 3 && _args14[3] !== undefined ? _args14[3] : null;
+                            stakingKeyHashHex = _args14.length > 4 && _args14[4] !== undefined ? _args14[4] : null;
+                            stakingBlockchainPointer = _args14.length > 5 && _args14[5] !== undefined ? _args14[5] : null;
                             data = Buffer.concat([_utils["default"].amount_to_buf(amountStr), _utils["default"].uint8_to_buf(TxOutputTypeCodes.SIGN_TX_OUTPUT_TYPE_ADDRESS_PARAMS), _cardano["default"].serializeAddressInfo(addressTypeNibble, addressTypeNibble == AddressTypeNibbles.BYRON ? protocolMagic : networkId, spendingPath, stakingPath, stakingKeyHashHex, stakingBlockchainPointer)]);
                             console.log('change_output', JSON.stringify({
                               addressTypeNibble: addressTypeNibble,
@@ -761,33 +787,33 @@ var Ada = /*#__PURE__*/function () {
                               stakingKeyHashHex: stakingKeyHashHex,
                               stakingBlockchainPointer: stakingBlockchainPointer
                             }));
-                            _context13.next = 7;
+                            _context14.next = 7;
                             return _send(P1_STAGE_OUTPUTS, P2_UNUSED, data);
 
                           case 7:
-                            response = _context13.sent;
+                            response = _context14.sent;
 
                             _utils.Assert.assert(response.length == 0);
 
                           case 9:
                           case "end":
-                            return _context13.stop();
+                            return _context14.stop();
                         }
                       }
-                    }, _callee13);
+                    }, _callee14);
                   }));
 
-                  return function signTx_addChangeOutput(_x28, _x29, _x30) {
-                    return _ref6.apply(this, arguments);
+                  return function signTx_addChangeOutput(_x31, _x32, _x33) {
+                    return _ref7.apply(this, arguments);
                   };
                 }();
 
                 signTx_addCertificate = /*#__PURE__*/function () {
-                  var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee14(type, path, poolKeyHashHex) {
+                  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(type, path, poolKeyHashHex) {
                     var dataFields, data, response;
-                    return _regenerator["default"].wrap(function _callee14$(_context14) {
+                    return _regenerator["default"].wrap(function _callee15$(_context15) {
                       while (1) {
-                        switch (_context14.prev = _context14.next) {
+                        switch (_context15.prev = _context15.next) {
                           case 0:
                             dataFields = [_utils["default"].uint8_to_buf(type), _utils["default"].path_to_buf(path)];
 
@@ -801,48 +827,15 @@ var Ada = /*#__PURE__*/function () {
                               poolKeyHashHex: poolKeyHashHex
                             }));
                             data = Buffer.concat(dataFields);
-                            _context14.next = 6;
+                            _context15.next = 6;
                             return _send(P1_STAGE_CERTIFICATES, P2_UNUSED, data);
 
                           case 6:
-                            response = _context14.sent;
-
-                            _utils.Assert.assert(response.length == 0);
-
-                          case 8:
-                          case "end":
-                            return _context14.stop();
-                        }
-                      }
-                    }, _callee14);
-                  }));
-
-                  return function signTx_addCertificate(_x31, _x32, _x33) {
-                    return _ref7.apply(this, arguments);
-                  };
-                }();
-
-                signTx_addWithdrawal = /*#__PURE__*/function () {
-                  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee15(path, amountStr) {
-                    var data, response;
-                    return _regenerator["default"].wrap(function _callee15$(_context15) {
-                      while (1) {
-                        switch (_context15.prev = _context15.next) {
-                          case 0:
-                            data = Buffer.concat([_utils["default"].amount_to_buf(amountStr), _utils["default"].path_to_buf(path)]);
-                            console.log('withdrawal', JSON.stringify({
-                              path: path,
-                              amountStr: amountStr
-                            }));
-                            _context15.next = 4;
-                            return _send(P1_STAGE_WITHDRAWALS, P2_UNUSED, data);
-
-                          case 4:
                             response = _context15.sent;
 
                             _utils.Assert.assert(response.length == 0);
 
-                          case 6:
+                          case 8:
                           case "end":
                             return _context15.stop();
                         }
@@ -850,24 +843,25 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee15);
                   }));
 
-                  return function signTx_addWithdrawal(_x34, _x35) {
+                  return function signTx_addCertificate(_x34, _x35, _x36) {
                     return _ref8.apply(this, arguments);
                   };
                 }();
 
-                signTx_setFee = /*#__PURE__*/function () {
-                  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16(feeStr) {
+                signTx_addWithdrawal = /*#__PURE__*/function () {
+                  var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee16(path, amountStr) {
                     var data, response;
                     return _regenerator["default"].wrap(function _callee16$(_context16) {
                       while (1) {
                         switch (_context16.prev = _context16.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].amount_to_buf(feeStr)]);
-                            console.log('fee', JSON.stringify({
-                              feeStr: feeStr
+                            data = Buffer.concat([_utils["default"].amount_to_buf(amountStr), _utils["default"].path_to_buf(path)]);
+                            console.log('withdrawal', JSON.stringify({
+                              path: path,
+                              amountStr: amountStr
                             }));
                             _context16.next = 4;
-                            return _send(P1_STAGE_FEE, P2_UNUSED, data);
+                            return _send(P1_STAGE_WITHDRAWALS, P2_UNUSED, data);
 
                           case 4:
                             response = _context16.sent;
@@ -882,24 +876,24 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee16);
                   }));
 
-                  return function signTx_setFee(_x36) {
+                  return function signTx_addWithdrawal(_x37, _x38) {
                     return _ref9.apply(this, arguments);
                   };
                 }();
 
-                signTx_setTtl = /*#__PURE__*/function () {
-                  var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17(ttlStr) {
+                signTx_setFee = /*#__PURE__*/function () {
+                  var _ref10 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee17(feeStr) {
                     var data, response;
                     return _regenerator["default"].wrap(function _callee17$(_context17) {
                       while (1) {
                         switch (_context17.prev = _context17.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].amount_to_buf(ttlStr)]);
-                            console.log('tll', JSON.stringify({
-                              ttlStr: ttlStr
+                            data = Buffer.concat([_utils["default"].amount_to_buf(feeStr)]);
+                            console.log('fee', JSON.stringify({
+                              feeStr: feeStr
                             }));
                             _context17.next = 4;
-                            return _send(P1_STAGE_TTL, P2_UNUSED, data);
+                            return _send(P1_STAGE_FEE, P2_UNUSED, data);
 
                           case 4:
                             response = _context17.sent;
@@ -914,28 +908,31 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee17);
                   }));
 
-                  return function signTx_setTtl(_x37) {
+                  return function signTx_setFee(_x39) {
                     return _ref10.apply(this, arguments);
                   };
                 }();
 
-                signTx_setMetadata = /*#__PURE__*/function () {
-                  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee18(metadataHashHex) {
+                signTx_setTtl = /*#__PURE__*/function () {
+                  var _ref11 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee18(ttlStr) {
                     var data, response;
                     return _regenerator["default"].wrap(function _callee18$(_context18) {
                       while (1) {
                         switch (_context18.prev = _context18.next) {
                           case 0:
-                            data = _utils["default"].hex_to_buf(metadataHashHex);
-                            _context18.next = 3;
-                            return _send(P1_STAGE_METADATA, P2_UNUSED, data);
+                            data = Buffer.concat([_utils["default"].amount_to_buf(ttlStr)]);
+                            console.log('tll', JSON.stringify({
+                              ttlStr: ttlStr
+                            }));
+                            _context18.next = 4;
+                            return _send(P1_STAGE_TTL, P2_UNUSED, data);
 
-                          case 3:
+                          case 4:
                             response = _context18.sent;
 
                             _utils.Assert.assert(response.length == 0);
 
-                          case 5:
+                          case 6:
                           case "end":
                             return _context18.stop();
                         }
@@ -943,28 +940,28 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee18);
                   }));
 
-                  return function signTx_setMetadata(_x38) {
+                  return function signTx_setTtl(_x40) {
                     return _ref11.apply(this, arguments);
                   };
                 }();
 
-                signTx_awaitConfirm = /*#__PURE__*/function () {
-                  var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
-                    var response;
+                signTx_setMetadata = /*#__PURE__*/function () {
+                  var _ref12 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19(metadataHashHex) {
+                    var data, response;
                     return _regenerator["default"].wrap(function _callee19$(_context19) {
                       while (1) {
                         switch (_context19.prev = _context19.next) {
                           case 0:
-                            _context19.next = 2;
-                            return _send(P1_STAGE_CONFIRM, P2_UNUSED, _utils["default"].hex_to_buf(""));
+                            data = _utils["default"].hex_to_buf(metadataHashHex);
+                            _context19.next = 3;
+                            return _send(P1_STAGE_METADATA, P2_UNUSED, data);
 
-                          case 2:
+                          case 3:
                             response = _context19.sent;
-                            return _context19.abrupt("return", {
-                              txHashHex: response.toString("hex")
-                            });
 
-                          case 4:
+                            _utils.Assert.assert(response.length == 0);
+
+                          case 5:
                           case "end":
                             return _context19.stop();
                         }
@@ -972,30 +969,28 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee19);
                   }));
 
-                  return function signTx_awaitConfirm() {
+                  return function signTx_setMetadata(_x41) {
                     return _ref12.apply(this, arguments);
                   };
                 }();
 
-                signTx_getWitness = /*#__PURE__*/function () {
-                  var _ref13 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee20(path) {
-                    var data, response;
+                signTx_awaitConfirm = /*#__PURE__*/function () {
+                  var _ref13 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee20() {
+                    var response;
                     return _regenerator["default"].wrap(function _callee20$(_context20) {
                       while (1) {
                         switch (_context20.prev = _context20.next) {
                           case 0:
-                            data = Buffer.concat([_utils["default"].path_to_buf(path)]);
-                            _context20.next = 3;
-                            return _send(P1_STAGE_WITNESSES, P2_UNUSED, data);
+                            _context20.next = 2;
+                            return _send(P1_STAGE_CONFIRM, P2_UNUSED, _utils["default"].hex_to_buf(""));
 
-                          case 3:
+                          case 2:
                             response = _context20.sent;
                             return _context20.abrupt("return", {
-                              path: path,
-                              witnessSignatureHex: _utils["default"].buf_to_hex(response)
+                              txHashHex: response.toString("hex")
                             });
 
-                          case 5:
+                          case 4:
                           case "end":
                             return _context20.stop();
                         }
@@ -1003,8 +998,39 @@ var Ada = /*#__PURE__*/function () {
                     }, _callee20);
                   }));
 
-                  return function signTx_getWitness(_x39) {
+                  return function signTx_awaitConfirm() {
                     return _ref13.apply(this, arguments);
+                  };
+                }();
+
+                signTx_getWitness = /*#__PURE__*/function () {
+                  var _ref14 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee21(path) {
+                    var data, response;
+                    return _regenerator["default"].wrap(function _callee21$(_context21) {
+                      while (1) {
+                        switch (_context21.prev = _context21.next) {
+                          case 0:
+                            data = Buffer.concat([_utils["default"].path_to_buf(path)]);
+                            _context21.next = 3;
+                            return _send(P1_STAGE_WITNESSES, P2_UNUSED, data);
+
+                          case 3:
+                            response = _context21.sent;
+                            return _context21.abrupt("return", {
+                              path: path,
+                              witnessSignatureHex: _utils["default"].buf_to_hex(response)
+                            });
+
+                          case 5:
+                          case "end":
+                            return _context21.stop();
+                        }
+                      }
+                    }, _callee21);
+                  }));
+
+                  return function signTx_getWitness(_x42) {
+                    return _ref14.apply(this, arguments);
                   };
                 }(); // init
                 //console.log("init");
@@ -1024,256 +1050,256 @@ var Ada = /*#__PURE__*/function () {
                   }
                 }
 
-                _context21.next = 28;
+                _context22.next = 29;
                 return signTx_init(networkId, protocolMagic, inputs.length, outputs.length, certificates.length, withdrawals.length, witnessPaths.length, metadataHashHex != null);
 
-              case 28:
+              case 29:
                 // inputs
                 //console.log("inputs");
                 _iterator = _createForOfIteratorHelper(inputs);
-                _context21.prev = 29;
+                _context22.prev = 30;
 
                 _iterator.s();
 
-              case 31:
+              case 32:
                 if ((_step = _iterator.n()).done) {
-                  _context21.next = 37;
+                  _context22.next = 38;
                   break;
                 }
 
                 input = _step.value;
-                _context21.next = 35;
+                _context22.next = 36;
                 return signTx_addInput(input);
 
-              case 35:
-                _context21.next = 31;
+              case 36:
+                _context22.next = 32;
                 break;
 
-              case 37:
-                _context21.next = 42;
+              case 38:
+                _context22.next = 43;
                 break;
 
-              case 39:
-                _context21.prev = 39;
-                _context21.t0 = _context21["catch"](29);
+              case 40:
+                _context22.prev = 40;
+                _context22.t0 = _context22["catch"](30);
 
-                _iterator.e(_context21.t0);
+                _iterator.e(_context22.t0);
 
-              case 42:
-                _context21.prev = 42;
+              case 43:
+                _context22.prev = 43;
 
                 _iterator.f();
 
-                return _context21.finish(42);
+                return _context22.finish(43);
 
-              case 45:
+              case 46:
                 // outputs
                 //console.log("outputs");
                 _iterator2 = _createForOfIteratorHelper(outputs);
-                _context21.prev = 46;
+                _context22.prev = 47;
 
                 _iterator2.s();
 
-              case 48:
+              case 49:
                 if ((_step2 = _iterator2.n()).done) {
-                  _context21.next = 63;
+                  _context22.next = 64;
                   break;
                 }
 
                 output = _step2.value;
 
                 if (!output.addressHex) {
-                  _context21.next = 55;
+                  _context22.next = 56;
                   break;
                 }
 
-                _context21.next = 53;
+                _context22.next = 54;
                 return signTx_addAddressOutput(output.addressHex, output.amountStr);
 
-              case 53:
-                _context21.next = 61;
+              case 54:
+                _context22.next = 62;
                 break;
 
-              case 55:
+              case 56:
                 if (!output.spendingPath) {
-                  _context21.next = 60;
+                  _context22.next = 61;
                   break;
                 }
 
-                _context21.next = 58;
+                _context22.next = 59;
                 return signTx_addChangeOutput(output.addressTypeNibble, output.spendingPath, output.amountStr, output.stakingPath, output.stakingKeyHashHex, output.stakingBlockchainPointer);
 
-              case 58:
-                _context21.next = 61;
+              case 59:
+                _context22.next = 62;
                 break;
-
-              case 60:
-                throw new Error("TODO");
 
               case 61:
-                _context21.next = 48;
+                throw new Error("TODO");
+
+              case 62:
+                _context22.next = 49;
                 break;
 
-              case 63:
-                _context21.next = 68;
+              case 64:
+                _context22.next = 69;
                 break;
 
-              case 65:
-                _context21.prev = 65;
-                _context21.t1 = _context21["catch"](46);
+              case 66:
+                _context22.prev = 66;
+                _context22.t1 = _context22["catch"](47);
 
-                _iterator2.e(_context21.t1);
+                _iterator2.e(_context22.t1);
 
-              case 68:
-                _context21.prev = 68;
+              case 69:
+                _context22.prev = 69;
 
                 _iterator2.f();
 
-                return _context21.finish(68);
+                return _context22.finish(69);
 
-              case 71:
-                _context21.next = 73;
+              case 72:
+                _context22.next = 74;
                 return signTx_setFee(feeStr);
 
-              case 73:
-                _context21.next = 75;
+              case 74:
+                _context22.next = 76;
                 return signTx_setTtl(ttlStr);
 
-              case 75:
+              case 76:
                 if (!(certificates.length > 0)) {
-                  _context21.next = 93;
+                  _context22.next = 94;
                   break;
                 }
 
                 _iterator3 = _createForOfIteratorHelper(certificates);
-                _context21.prev = 77;
+                _context22.prev = 78;
 
                 _iterator3.s();
 
-              case 79:
+              case 80:
                 if ((_step3 = _iterator3.n()).done) {
-                  _context21.next = 85;
+                  _context22.next = 86;
                   break;
                 }
 
                 certificate = _step3.value;
-                _context21.next = 83;
+                _context22.next = 84;
                 return signTx_addCertificate(certificate.type, certificate.path, certificate.poolKeyHashHex);
 
-              case 83:
-                _context21.next = 79;
+              case 84:
+                _context22.next = 80;
                 break;
 
-              case 85:
-                _context21.next = 90;
+              case 86:
+                _context22.next = 91;
                 break;
 
-              case 87:
-                _context21.prev = 87;
-                _context21.t2 = _context21["catch"](77);
+              case 88:
+                _context22.prev = 88;
+                _context22.t2 = _context22["catch"](78);
 
-                _iterator3.e(_context21.t2);
+                _iterator3.e(_context22.t2);
 
-              case 90:
-                _context21.prev = 90;
+              case 91:
+                _context22.prev = 91;
 
                 _iterator3.f();
 
-                return _context21.finish(90);
+                return _context22.finish(91);
 
-              case 93:
+              case 94:
                 if (!(withdrawals.length > 0)) {
-                  _context21.next = 111;
+                  _context22.next = 112;
                   break;
                 }
 
                 _iterator4 = _createForOfIteratorHelper(withdrawals);
-                _context21.prev = 95;
+                _context22.prev = 96;
 
                 _iterator4.s();
 
-              case 97:
+              case 98:
                 if ((_step4 = _iterator4.n()).done) {
-                  _context21.next = 103;
+                  _context22.next = 104;
                   break;
                 }
 
                 withdrawal = _step4.value;
-                _context21.next = 101;
+                _context22.next = 102;
                 return signTx_addWithdrawal(withdrawal.path, withdrawal.amountStr);
 
-              case 101:
-                _context21.next = 97;
+              case 102:
+                _context22.next = 98;
                 break;
 
-              case 103:
-                _context21.next = 108;
+              case 104:
+                _context22.next = 109;
                 break;
 
-              case 105:
-                _context21.prev = 105;
-                _context21.t3 = _context21["catch"](95);
+              case 106:
+                _context22.prev = 106;
+                _context22.t3 = _context22["catch"](96);
 
-                _iterator4.e(_context21.t3);
+                _iterator4.e(_context22.t3);
 
-              case 108:
-                _context21.prev = 108;
+              case 109:
+                _context22.prev = 109;
 
                 _iterator4.f();
 
-                return _context21.finish(108);
+                return _context22.finish(109);
 
-              case 111:
+              case 112:
                 if (!(metadataHashHex != null)) {
-                  _context21.next = 114;
+                  _context22.next = 115;
                   break;
                 }
 
-                _context21.next = 114;
+                _context22.next = 115;
                 return signTx_setMetadata(metadataHashHex);
 
-              case 114:
-                _context21.next = 116;
+              case 115:
+                _context22.next = 117;
                 return signTx_awaitConfirm();
 
-              case 116:
-                _yield$signTx_awaitCo = _context21.sent;
+              case 117:
+                _yield$signTx_awaitCo = _context22.sent;
                 txHashHex = _yield$signTx_awaitCo.txHashHex;
                 //console.log("witnesses");
                 witnesses = [];
                 _i2 = 0, _witnessPaths = witnessPaths;
 
-              case 120:
+              case 121:
                 if (!(_i2 < _witnessPaths.length)) {
-                  _context21.next = 129;
+                  _context22.next = 130;
                   break;
                 }
 
                 _path = _witnessPaths[_i2];
-                _context21.next = 124;
+                _context22.next = 125;
                 return signTx_getWitness(_path);
 
-              case 124:
-                witness = _context21.sent;
+              case 125:
+                witness = _context22.sent;
                 witnesses.push(witness);
 
-              case 126:
+              case 127:
                 _i2++;
-                _context21.next = 120;
+                _context22.next = 121;
                 break;
 
-              case 129:
-                return _context21.abrupt("return", {
+              case 130:
+                return _context22.abrupt("return", {
                   txHashHex: txHashHex,
                   witnesses: witnesses
                 });
 
-              case 130:
+              case 131:
               case "end":
-                return _context21.stop();
+                return _context22.stop();
             }
           }
-        }, _callee21, null, [[29, 39, 42, 45], [46, 65, 68, 71], [77, 87, 90, 93], [95, 105, 108, 111]]);
+        }, _callee22, null, [[30, 40, 43, 46], [47, 66, 69, 72], [78, 88, 91, 94], [96, 106, 109, 112]]);
       }));
 
       function signTransaction(_x8, _x9, _x10, _x11, _x12, _x13, _x14, _x15, _x16) {
