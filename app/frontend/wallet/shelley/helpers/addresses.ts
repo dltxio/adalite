@@ -1,16 +1,20 @@
 import bech32 from './bech32'
 import {
   packBaseAddress,
-  packRewardsAccountAddress,
-  getAddressInfo,
+  packRewardAddress,
+  getAddressType,
   AddressTypes,
   base58,
+  getPubKeyBlake2b224Hash,
 } from 'cardano-crypto.js'
 import {HARDENED_THRESHOLD} from '../../constants'
 
 type HexString = string // TODO: specify
 
 const xpub2pub = (xpub: Buffer) => xpub.slice(0, 32)
+
+// takes xpubkey, converts it to pubkey and then to 28 byte blake2b encoded hash
+const xpub2blake2b224Hash = (xpub: Buffer) => getPubKeyBlake2b224Hash(xpub2pub(xpub))
 
 type Xpub = Buffer
 
@@ -31,23 +35,27 @@ export const base58AddressToHex = (address: string): HexString => {
 }
 
 export const accountAddressFromXpub = (stakeXpub: Xpub, networkId): string => {
-  const addrBuffer = packRewardsAccountAddress(xpub2pub(stakeXpub), 14, networkId)
+  const addrBuffer = packRewardAddress(xpub2blake2b224Hash(stakeXpub), networkId)
   return bech32.encode({prefix: 'addr', data: addrBuffer})
 }
 
 export const accountHexAddressFromXpub = (stakeXpub: Xpub, networkId): HexString => {
-  const addrBuffer = packRewardsAccountAddress(xpub2pub(stakeXpub), 14, networkId)
+  const addrBuffer = packRewardAddress(xpub2blake2b224Hash(stakeXpub), networkId)
   return Buffer.from(addrBuffer).toString('hex')
 }
 
 export const baseAddressFromXpub = (spendXpub: Xpub, stakeXpub: Xpub, networkId): string => {
-  const addrBuffer = packBaseAddress(xpub2pub(spendXpub), xpub2pub(stakeXpub), 0, networkId)
+  const addrBuffer = packBaseAddress(
+    xpub2blake2b224Hash(spendXpub),
+    xpub2blake2b224Hash(stakeXpub),
+    networkId
+  )
   return bech32.encode({prefix: 'addr', data: addrBuffer})
 }
 
 export const isShelleyAddress = (address): boolean => {
   try {
-    const addressType = getAddressInfo(Buffer.from(address, 'hex')).addressType
+    const addressType = getAddressType(Buffer.from(address, 'hex'))
     return (
       addressType === AddressTypes.BASE ||
       addressType === AddressTypes.ENTERPRISE ||
@@ -72,9 +80,9 @@ export const isValidShelleyAddress = (address: string): boolean => {
 }
 
 export const isBase = (address: string): boolean => {
-  return getAddressInfo(Buffer.from(address, 'hex')).addressType === AddressTypes.BASE
+  return getAddressType(Buffer.from(address, 'hex')) === AddressTypes.BASE
 }
 
 export const isByron = (address: string): boolean => {
-  return getAddressInfo(Buffer.from(address, 'hex')).addressType === AddressTypes.BOOTSTRAP
+  return getAddressType(Buffer.from(address, 'hex')) === AddressTypes.BOOTSTRAP
 }

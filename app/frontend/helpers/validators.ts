@@ -1,5 +1,4 @@
-import {isValidAddress as isValidByronAddress} from 'cardano-crypto.js'
-import {isValidShelleyAddress} from '../wallet/shelley/helpers/addresses'
+import {isValidByronAddress, isValidShelleyAddress} from 'cardano-crypto.js'
 import {ADALITE_CONFIG} from '../config'
 import {toCoins} from './adaConverters'
 import {validateMnemonic} from '../wallet/mnemonic'
