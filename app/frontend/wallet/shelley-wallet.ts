@@ -173,6 +173,7 @@ const ShelleyWallet = ({
   randomChangeSeed,
   cryptoProvider,
   isShelleyCompatible,
+  accountIndex,
 }: any) => {
   const {
     getMaxDonationAmount: _getMaxDonationAmount,
@@ -187,8 +188,6 @@ const ShelleyWallet = ({
   generateNewSeeds()
 
   const blockchainExplorer = ShelleyBlockchainExplorer(config)
-
-  const accountIndex = 0
 
   const myAddresses = MyAddresses({
     accountIndex,
@@ -507,6 +506,7 @@ const ShelleyWallet = ({
     getWalletInfo,
     getPoolInfo,
     checkCryptoProviderVersion,
+    accountIndex,
   }
 }
 

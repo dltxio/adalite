@@ -15,6 +15,7 @@ import {MainTab, SubTab} from './tabs'
 import InfoModal from '../../common/infoModal'
 import NotShelleyCompatibleDialog from '../login/nonShelleyCompatibleDialog'
 import DashboardErrorBanner from './dashboardErrorBanner'
+import AccountBar from './accountBar'
 
 interface Props {
   displayStakingPage: any
@@ -81,6 +82,7 @@ class DashboardPage extends Component<Props> {
     const mainTabs = ['Sending', 'Staking']
     return (
       <div className="page-wrapper">
+        <AccountBar />
         {isShelleyCompatible && displayInfoModal && <InfoModal />}
         {shouldShowNonShelleyCompatibleDialog && <NotShelleyCompatibleDialog />}
         {!isShelleyCompatible && <DashboardErrorBanner />}
