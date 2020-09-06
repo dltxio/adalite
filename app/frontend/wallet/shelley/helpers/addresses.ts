@@ -21,7 +21,8 @@ type Xpub = Buffer
 // TODO: do this more precisely
 export const isShelleyPath = (path) => path[0] - HARDENED_THRESHOLD === 1852
 
-export const isV1Address = (address: string) => address.startsWith('D') // TODO: make this proper
+// TODO: do this properly with cardano-crypto unpackAddress
+export const isV1Address = (address: string) => address.startsWith('D')
 
 export const bechAddressToHex = (address: string): HexString => {
   const parsed = bech32.decode(address)
@@ -53,30 +54,9 @@ export const baseAddressFromXpub = (spendXpub: Xpub, stakeXpub: Xpub, networkId)
   return bech32.encode({prefix: 'addr', data: addrBuffer})
 }
 
-export const isShelleyAddress = (address): boolean => {
-  try {
-    const addressType = getAddressType(Buffer.from(address, 'hex'))
-    return (
-      addressType === AddressTypes.BASE ||
-      addressType === AddressTypes.ENTERPRISE ||
-      addressType === AddressTypes.POINTER ||
-      addressType === AddressTypes.REWARDS
-    )
-  } catch (e) {
-    return false
-  }
-}
-
 export const isShelleyFormat = (address: string): boolean => {
+  // TODO: should we remove this?
   return address.startsWith('addr')
-}
-
-export const isValidShelleyAddress = (address: string): boolean => {
-  try {
-    return isShelleyFormat(address) && isShelleyAddress(bechAddressToHex(address))
-  } catch (e) {
-    return false
-  }
 }
 
 export const isBase = (address: string): boolean => {
