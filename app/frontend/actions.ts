@@ -1247,6 +1247,13 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
     })
   }
 
+  const selectAccount = (state, selectedAccount) => {
+    // TODO: Load account
+    setState({
+      selectedAccount,
+    })
+  }
+
   return {
     loadingAction,
     stopLoadingAction,
@@ -1297,5 +1304,6 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
     redeemRewards,
     openInfoModal,
     closeInfoModal,
+    selectAccount,
   }
 }

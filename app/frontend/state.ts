@@ -126,6 +126,7 @@ export interface State {
   }
   txConfirmType: string
   txSuccessTab: string
+  selectedAccount: number
 }
 
 const initialState: State = {
@@ -213,6 +214,7 @@ const initialState: State = {
   txConfirmType: '',
   txSuccessTab: '',
   keepConfirmationDialogOpen: false,
+  selectedAccount: 0,
 }
 
 export {initialState}
