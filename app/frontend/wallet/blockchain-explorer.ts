@@ -41,47 +41,54 @@ const blockchainExplorer = (ADALITE_CONFIG) => {
     return result.Right
   }
 
-  const getAddressInfos = cacheResults(5000)(_fetchBulkAddressInfo)
+  // const getAddressInfos = cacheResults(5000)(_fetchBulkAddressInfo)
 
   async function getTxHistory(addresses) {
-    const transactions = []
-    const chunks = range(0, Math.ceil(addresses.length / gapLimit))
-    const cachedAddressInfos = (await Promise.all(
-      chunks.map(async (index) => {
-        const beginIndex = index * gapLimit
-        return await getAddressInfos(addresses.slice(beginIndex, beginIndex + gapLimit))
-      })
-    )).reduce(
-      (acc, elem) => {
-        return {
-          caTxList: [...acc.caTxList, ...elem.caTxList],
-        }
-      },
-      {caTxList: []}
-    )
-    // create a deep copy of address infos since
-    // we are mutating effect and fee
-    const addressInfos = JSON.parse(JSON.stringify(cachedAddressInfos))
-    addressInfos.caTxList.forEach((tx) => {
-      transactions[tx.ctbId] = tx
-    })
+    // const transactions = []
+    // const chunks = range(0, Math.ceil(addresses.length / gapLimit))
+    // const cachedAddressInfos = (
+    //   await Promise.all(
+    //     chunks.map(async index => {
+    //       const beginIndex = index * gapLimit
+    //       return await getAddressInfos(
+    //         addresses.slice(beginIndex, beginIndex + gapLimit)
+    //       )
+    //     })
+    //   )
+    // ).reduce(
+    //   (acc, elem) => {
+    //     return {
+    //       caTxList: [...acc.caTxList, ...elem.caTxList]
+    //     }
+    //   },
+    //   {caTxList: []}
+    // )
+    // // create a deep copy of address infos since
+    // // we are mutating effect and fee
+    // const addressInfos = JSON.parse(JSON.stringify(cachedAddressInfos))
+    // addressInfos.caTxList.forEach(tx => {
+    //   transactions[tx.ctbId] = tx
+    // })
 
-    for (const t of Object.values(transactions)) {
-      t.fee = parseInt(t.fee, 10)
-      let effect = 0 //effect on wallet balance accumulated
-      for (const input of t.ctbInputs || []) {
-        if (addresses.includes(input[0])) {
-          effect -= +input[1].getCoin
-        }
-      }
-      for (const output of t.ctbOutputs || []) {
-        if (addresses.includes(output[0])) {
-          effect += +output[1].getCoin
-        }
-      }
-      t.effect = effect
-    }
-    return Object.values(transactions).sort((a, b) => b.ctbTimeIssued - a.ctbTimeIssued)
+    // for (const t of Object.values(transactions)) {
+    //   t.fee = parseInt(t.fee, 10)
+    //   let effect = 0 //effect on wallet balance accumulated
+    //   for (const input of t.ctbInputs || []) {
+    //     if (addresses.includes(input[0])) {
+    //       effect -= +input[1].getCoin
+    //     }
+    //   }
+    //   for (const output of t.ctbOutputs || []) {
+    //     if (addresses.includes(output[0])) {
+    //       effect += +output[1].getCoin
+    //     }
+    //   }
+    //   t.effect = effect
+    // }
+    // return Object.values(transactions).sort(
+    //   (a, b) => b.ctbTimeIssued - a.ctbTimeIssued
+    // )
+    return []
   }
 
   async function fetchTxInfo(txHash) {
@@ -99,12 +106,13 @@ const blockchainExplorer = (ADALITE_CONFIG) => {
   }
 
   async function isSomeAddressUsed(addresses) {
-    return (await getAddressInfos(addresses)).caTxNum > 0
+    return false //(await getAddressInfos(addresses)).caTxNum > 0
   }
 
   // TODO: we should have an endpoint for this
   async function filterUsedAddresses(addresses: Array<String>) {
-    const txHistory = await getTxHistory(addresses)
+    // const txHistory = await getTxHistory(addresses)
+    const txHistory = []
     const usedAddresses = new Set()
     txHistory.forEach((trx) => {
       ;(trx.ctbOutputs || []).forEach((output) => {
@@ -119,14 +127,18 @@ const blockchainExplorer = (ADALITE_CONFIG) => {
   }
 
   async function getBalance(addresses) {
-    const chunks = range(0, Math.ceil(addresses.length / gapLimit))
-    const balance = (await Promise.all(
-      chunks.map(async (index) => {
-        const beginIndex = index * gapLimit
-        return await getAddressInfos(addresses.slice(beginIndex, beginIndex + gapLimit))
-      })
-    )).reduce((acc, elem) => acc + parseInt(elem.caBalance.getCoin, 10), 0)
-    return balance
+    // const chunks = range(0, Math.ceil(addresses.length / gapLimit))
+    // const balance = (
+    //   await Promise.all(
+    //     chunks.map(async index => {
+    //       const beginIndex = index * gapLimit
+    //       return await getAddressInfos(
+    //         addresses.slice(beginIndex, beginIndex + gapLimit)
+    //       )
+    //     })
+    //   )
+    // ).reduce((acc, elem) => acc + parseInt(elem.caBalance.getCoin, 10), 0)
+    return 0 //balance
   }
 
   async function submitTxRaw(txHash, txBody) {
@@ -146,7 +158,9 @@ const blockchainExplorer = (ADALITE_CONFIG) => {
     if (!response.Right) {
       debugLog(`Unexpected tx submission response: ${JSON.stringify(response)}`)
       if (response.statusCode && response.statusCode === 400) {
-        throw NamedError('TransactionRejectedByNetwork', {message: response.Left})
+        throw NamedError('TransactionRejectedByNetwork', {
+          message: response.Left,
+        })
       } else {
         throw NamedError('ServerError')
       }

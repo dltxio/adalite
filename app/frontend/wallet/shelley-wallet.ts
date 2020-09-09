@@ -150,7 +150,7 @@ const ShelleyBlockchainExplorer = (config) => {
   }
 
   return {
-    getTxHistory: (addresses) => be.getTxHistory(addresses),
+    getTxHistory: null, //addresses => be.getTxHistory(addresses),
     fetchTxRaw: be.fetchTxRaw,
     fetchUnspentTxOutputs: (addresses) => be.fetchUnspentTxOutputs(addresses),
     isSomeAddressUsed: (addresses) => be.isSomeAddressUsed(addresses),
@@ -255,7 +255,9 @@ const ShelleyWallet = ({
     const signedTx = await cryptoProvider
       .signTx(txAux, [], myAddresses.fixedPathMapper())
       .catch((e) => {
-        throw NamedError('TransactionRejectedWhileSigning', {message: e.message})
+        throw NamedError('TransactionRejectedWhileSigning', {
+          message: e.message,
+        })
       })
     return signedTx
   }
@@ -333,23 +335,26 @@ const ShelleyWallet = ({
   }
 
   async function getWalletInfo() {
-    const {validStakepools} = await getValidStakepools()
-    const {stakingBalance, nonStakingBalance, balance} = await getBalance()
-    const shelleyAccountInfo = await getAccountInfo(validStakepools)
+    // const {validStakepools} = await getValidStakepools()
+    // const {stakingBalance, nonStakingBalance, balance} = await getBalance()
+    // const shelleyAccountInfo = await getAccountInfo(validStakepools)
     const visibleAddresses = await getVisibleAddresses()
-    const transactionHistory = await getHistory()
-    const stakingHistory = await getStakingHistory(shelleyAccountInfo, validStakepools)
+    // const transactionHistory = await getHistory()
+    // const stakingHistory = await getStakingHistory(
+    //   shelleyAccountInfo,
+    //   validStakepools
+    // )
     return {
-      validStakepools,
-      balance,
+      // validStakepools,
+      // balance,
       shelleyBalances: {
-        nonStakingBalance,
-        stakingBalance: stakingBalance + shelleyAccountInfo.value,
-        rewardsAccountBalance: shelleyAccountInfo.value,
+        // nonStakingBalance,
+        // stakingBalance: stakingBalance + shelleyAccountInfo.value,
+        // rewardsAccountBalance: shelleyAccountInfo.value
       },
-      shelleyAccountInfo,
-      transactionHistory,
-      stakingHistory,
+      // shelleyAccountInfo,
+      // transactionHistory,
+      // stakingHistory,
       visibleAddresses,
     }
   }
@@ -416,10 +421,10 @@ const ShelleyWallet = ({
 
   async function getChangeAddress() {
     /*
-    * We use visible addresses as change addresses to mainintain
-    * AdaLite original functionality which did not consider change addresses.
-    * This is an intermediate step between legacy mode and full Yoroi compatibility.
-    */
+     * We use visible addresses as change addresses to mainintain
+     * AdaLite original functionality which did not consider change addresses.
+     * This is an intermediate step between legacy mode and full Yoroi compatibility.
+     */
     const candidates = await getVisibleAddresses()
 
     // const randomSeedGenerator = PseudoRandom(rngSeed)

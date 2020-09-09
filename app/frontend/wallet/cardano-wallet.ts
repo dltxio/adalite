@@ -147,7 +147,9 @@ const CardanoWallet = (options) => {
       .signTx(txAux, rawInputTxs, myAddresses.getAddressToAbsPathMapper())
       .catch((e) => {
         debugLog(e)
-        throw NamedError('TransactionRejectedWhileSigning', {message: e.message})
+        throw NamedError('TransactionRejectedWhileSigning', {
+          message: e.message,
+        })
       })
 
     return signedTx
@@ -177,12 +179,12 @@ const CardanoWallet = (options) => {
   }
 
   async function getWalletInfo() {
-    const balance = await getBalance()
-    const transactionHistory = await getHistory()
+    // const balance = await getBalance()
+    // const transactionHistory = await getHistory()
     const visibleAddresses = await getVisibleAddresses()
     return {
-      balance,
-      transactionHistory,
+      // balance,
+      // transactionHistory,
       visibleAddresses,
     }
   }
@@ -214,10 +216,10 @@ const CardanoWallet = (options) => {
 
   async function getChangeAddress() {
     /*
-    * We use visible addresses as change addresses to mainintain
-    * AdaLite original functionality which did not consider change addresses.
-    * This is an intermediate step between legacy mode and full Yoroi compatibility.
-    */
+     * We use visible addresses as change addresses to mainintain
+     * AdaLite original functionality which did not consider change addresses.
+     * This is an intermediate step between legacy mode and full Yoroi compatibility.
+     */
     const candidates = await getVisibleAddresses()
 
     const randomSeedGenerator = PseudoRandom(seeds.randomChangeSeed)

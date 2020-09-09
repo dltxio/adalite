@@ -160,7 +160,7 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
           throw Error('bad cardano version')
       }
       const walletInfo = await wallet.getWalletInfo()
-      const conversionRatesPromise = getConversionRates(state)
+      // const conversionRatesPromise = getConversionRates(state)
       const usingHwWallet = wallet.isHwWallet()
       const hwWalletName = usingHwWallet ? wallet.getHwWalletName() : undefined
       if (usingHwWallet) loadingAction(state, `Waiting for ${hwWalletName}...`)
@@ -195,7 +195,7 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
         ticker2Id,
         isShelleyCompatible,
       })
-      await fetchConversionRates(conversionRatesPromise)
+      // await fetchConversionRates(conversionRatesPromise)
     } catch (e) {
       setState({
         loading: false,
@@ -572,7 +572,12 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
     const coins = state.sendAmount.coins as Lovelace
     const donationAmount = state.donationAmount.coins as Lovelace
     const address = state.sendAddress.fieldValue
-    const plan = await prepareTxPlan({address, coins, donationAmount, txType: 'sendAda'})
+    const plan = await prepareTxPlan({
+      address,
+      coins,
+      donationAmount,
+      txType: 'sendAda',
+    })
     const newState = getState() // if the values changed meanwhile
     if (
       newState.sendAmount.fieldValue !== state.sendAmount.fieldValue ||
@@ -890,7 +895,11 @@ export default ({setState, getState}: {setState: SetStateFn; getState: GetStateF
     setPoolInfo(state)
     const poolHash = state.shelleyDelegation.selectedPool.poolHash
     const stakingKeyRegistered = state.shelleyAccountInfo.hasStakingKey
-    const plan = await prepareTxPlan({poolHash, stakingKeyRegistered, txType: 'delegate'})
+    const plan = await prepareTxPlan({
+      poolHash,
+      stakingKeyRegistered,
+      txType: 'delegate',
+    })
     const newState = getState()
     if (hasPoolIdentifiersChanged(newState)) {
       return
